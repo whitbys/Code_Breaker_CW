@@ -11,46 +11,27 @@ public class GUI implements ActionListener{
     private static final int numButtons = 7;
 
     //instance variables
-    private int guessNum = 4;
-    private int tryNum = 6;
-    private int numLabels = guessNum * tryNum;
-    private int startPoint = 20;
+    private int startPoint = game.getTryNum()*game.getGuessNum() 
+                           - game.getGuessNum();
+    private String butPressed = null;
 
     //frame + components
     private static JFrame frame = new JFrame("CODE BREAKER");
     private static JPanel pan[] = new JPanel[numPanels];
     private static Picture pic[] = new Picture[numPics];
     private static JButton but[] = new JButton[numButtons];
-    private JPanel resultPanel[] = new JPanel[tryNum];
-    private JLabel boardLabel[] = new JLabel[numLabels];
-    private JLabel resultLabel[] = new JLabel[numLabels];
-
-    guess guess = new guess();
-
-    public GUI(){
-        pan[0] = new JPanel(new BorderLayout());
-        frame.setContentPane(pan[0]);
-
-        initPictures();
-        initButtons();
-        initBoard(6);
-        initResults(6, 4);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 600);
-        frame.setVisible(true);
-    }
-    
-    
-    
+    private JPanel resultPanel[] = new JPanel[game.getTryNum()*200];
+    private JLabel boardLabel[] = new JLabel[game.getTryNum()*game.getGuessNum() *200];
+    private JLabel resultLabel[] = new JLabel[game.getTryNum()*game.getGuessNum() *200];
+ 
     
     public GUI(int tN, int gN){
         pan[0] = new JPanel(new BorderLayout());
         frame.setContentPane(pan[0]);
-
+        
         initPictures();
         initButtons();
-        initBoard(tN);
+        initBoard(tN, gN);
         initResults(tN, gN);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,20 +47,51 @@ public class GUI implements ActionListener{
                 piccy = pic[m];
             }
         }
+        
         boardLabel[startPoint].setIcon(piccy);
-        movePoint(startPoint);//move JLabel to be changed
-
-    }
-
-    private void movePoint(int s){
+        whichButPressed(piccy);
         startPoint++;
-        if(startPoint == 4){
+        
+        if(startPoint == game.getGuessNum()){
             System.exit(0);
+            //settings class : win status panel,high score, etc  + 3 difficulty levels
+            //if win -> win screen + setting
+            //if lose -> lose screen + setting
         }
-        else if((startPoint %4) == 0){
-            startPoint = startPoint - (guessNum*2);
+        
+        
+        if((startPoint % game.getGuessNum()) == 0){
+            newRowFlag();
+            
+            startPoint = startPoint - (game.getGuessNum()*2);
         }
+        
     }
+
+    /* public String whichButPressed(Picture p){
+        switch(p.getFilename()){
+            case "Colour_0.png":
+                return "red";
+            case "Colour_1.png":
+                return "orange";
+            case "Colour_2.png":
+                return "yellow";
+            case "Colour_3.png":
+                return "green";
+            case "Colour_4.png":
+                return "blue";
+            case "Colour_5.png":
+                return "indigo";
+            case "Colour_6.png":
+                return "violet";
+        }
+        return "x";
+    } */
+
+    public Boolean newRowFlag(){
+        return true;
+    }       
+
     
     //initializers--------------------------------------
     private void initPictures(){
@@ -106,14 +118,14 @@ public class GUI implements ActionListener{
         }
     }
 
-    public void initBoard(int tN){
-        tN = tN * guessNum;
-
-        System.out.println(" " + tN);
-
-        pan[2] = new JPanel(new GridLayout(tryNum, guessNum));
-        pan[0].add(pan[2], BorderLayout.CENTER);
+    public void initBoard(int tN, int gN){
+        if(pan[2] != null){
+            frame.remove(pan[2]);
+        }
         
+        pan[2] = new JPanel(new GridLayout(tN, gN));
+        pan[0].add(pan[2], BorderLayout.CENTER);
+        tN = tN * gN;
         for(int j = 0; j < tN; j++){
             boardLabel[j] = new JLabel(pic[7]);
             pan[2].add(boardLabel[j]);
@@ -121,7 +133,11 @@ public class GUI implements ActionListener{
     }
 
     public void initResults(int tN, int gN){
-        pan[3] = new JPanel(new GridLayout(tryNum, 1));
+        if(pan[3] != null){
+            frame.remove(pan[3]);
+        }
+
+        pan[3] = new JPanel(new GridLayout(tN, 1));
         pan[0].add(pan[3], BorderLayout.EAST);
         
         for(int k = 0; k < tN; k++){
@@ -137,33 +153,23 @@ public class GUI implements ActionListener{
 
     //getters--------------------------------------------
 
-    public int getGuessNum(){
-        return guessNum;
-    }
-
-    public int getTryNum(){
-        return tryNum;
-    }
-
-    public int getnumLabels(){
-        return numLabels;
-    }
-
     public static JButton getBut(int b){
         return but[b];
     }
+
+    public JFrame getJFrame(){
+        return frame;
+    }
+
+    public JButton getButPressed(){
+        return e.getSource();
+    }
+
+    public static Picture getPic(int c){
+        return pic[c];
+    }
     //setters--------------------------------------------
 
-    public void setGuessNum(int x){
-        guessNum = x;
-    }
-
-    public void setTryNum(int y){
-        tryNum = y;
-    }
-
-    public void setnumLabels(int z){
-        numLabels = z;
-    }
+    
 
 }
