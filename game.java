@@ -1,3 +1,9 @@
+//clean up stuff:
+//change variable names
+//add coments
+//make functions out of chunks of code
+//fix newline mechanic
+//fix GUI array size declaration
 
 //put the tryNum and guess num here as static variables
 //static reference them in GUI
@@ -10,6 +16,7 @@ public class game{
     
     
     
+    
     //includes logic for different levels
     //change gui contructor to be able to input diff amounts of tries and guesses
     
@@ -18,7 +25,10 @@ public class game{
     //guess (recording guesses)
     //ColourCode
     
-    
+    //things to ask:
+    //private static, getters and setters for everything
+    //change filename
+
 
     public static void main(String[] args){
         String level[] = new String[3];
@@ -27,21 +37,10 @@ public class game{
         level[2] = "HARD";
 
         GUI gui = new GUI(tryNum, guessNum);
-        Guess guess = new Guess();
-        ColourCode colourCode = new ColourCode();
-        colourCode.initCode();
+        //guess guess = new guess();
+
         
-        while(gameOverFlag() != true){
-            inputMyArray(Guess.getGuessNum(), gui.whichButtonPressed());
-            
-            if(newRowFlag()){
-                GUI.updateResults(guess.colCheck(Guess.getMyArray(), ColourCode.getAnswerArray()));
-                GUI.updateResults(guess.colAndPlaceCheck(Guess.getMyArray(), ColourCode.getAnswerArray()));
 
-
-                colourCode.initCode();
-            }
-        }
         
 //in update results have a parameter of how many times -> put into for loop
 
@@ -51,10 +50,6 @@ public class game{
 
         //gui.getJFrame().dispose();
     }
-
-    /* public void initCorrectArray(int gN){
-
-    } */
     
 
     
@@ -82,3 +77,16 @@ public class game{
 
 
 }
+
+
+/* if(startPoint == game.getGuessNum()){
+    System.exit(0);
+    //set startpoint to 1(arbitrary value in range)
+    //display success window for 10 seconds 
+    //back to settings
+    
+    
+    //settings class : win status panel,high score, etc  + 3 difficulty levels
+    //if win -> win screen + setting
+    //if lose -> lose screen + setting
+} */

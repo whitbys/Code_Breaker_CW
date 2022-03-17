@@ -1,51 +1,40 @@
-import javax.swing.*;
+ import javax.swing.*;
 
 
 public class guess{
-    
-    private int numGuesses = 0;
-    
-    String playerGuess[] = new String[game.getGuessNum()];
-    String gameAnswer[] = new String[game.getGuessNum()];
-    
-    
-    public 
-    
-    
-    public int colAndPlaceCheck(String array1[], String array2[]){
-        int nColAndPlace = 0;
-        
-        for(int i = 0; i < game.getGuessNum(); i++){
-            if(array1[i] == array2[i]){
-                nColAndPlace++;
-            }
-        }
-        return nColAndPlace;
-        
-    }
 
-    public boolean colCheck(String array1[], String array2[]){
-        int nCol  = 0;
-        
-        for(int i = 0; i < game.getGuessNum(); i++){
-            for(int j = 0; j < game.getGuessNum(); j++){
-                if(array1[i] == array2[j]){
-                    nCol++;
-                }
-            }
-        }
-        return nCol;;
-    }
+    private int numGuessesSoFar = 0;
+    String myArray[] = new String[game.getGuessNum()];
+    
+    
+    public guess(){
 
+    }
+    
+    
+    public void inputMyArray(Picture p){
+        myArray[numGuessesSoFar] = p.getFilename();
+        System.out.println("myGUESS: "+myArray[numGuessesSoFar]);
+        guessIncrement();
+    }
+    
     public void guessIncrement(){
-        numGuesses++;
-
-        if(numGuesses == game.getGuessNum() + 1){
-            numGuesses = numGuesses - game.getGuessNum();
+        numGuessesSoFar++;
+        if(numGuessesSoFar == game.getGuessNum()){
+            numGuessesSoFar = numGuessesSoFar - game.getGuessNum();
+            //triesSoFar++;
         }
     }
 
-    public int getGuesses(){
-        return numGuesses;
+    public String[] getMyArray(){
+        return myArray;
     }
-}
+
+    public int getGuessesSoFar(){
+        return numGuessesSoFar;
+    }
+
+
+    
+
+} 
