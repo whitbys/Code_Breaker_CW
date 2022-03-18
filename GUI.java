@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-
-import java.awt.*;
 import java.awt.event.*;
 
 public class GUI implements ActionListener{
@@ -11,10 +9,10 @@ public class GUI implements ActionListener{
     private static final int numButtons = 7;
 
     //instance variables
-    private int startPoint = game.getTryNum()*game.getGuessNum() 
-                           - game.getGuessNum();
+    private int startPoint = 0;
     private String butPressed = null;
-    private int dynTryNum = game.getTryNum() - 1;//for arrays
+
+    private int p = 0;
 
     //frame + components
     private static JFrame frame = new JFrame("CODE BREAKER");
@@ -23,10 +21,13 @@ public class GUI implements ActionListener{
     private static JButton but[] = new JButton[numButtons];
     private JPanel resultPanel[] = new JPanel[game.getTryNum()*200];//maybe fix this
     private JLabel boardLabel[] = new JLabel[game.getTryNum()*game.getGuessNum() *200];
-    private JLabel resultLabel[] = new JLabel[game.getTryNum()*game.getGuessNum() *200];
+    private JLabel resultLabel[] = new JLabel[game.getGuessNum()*20];
+    private JLabel tJLabel = new JLabel();
 
     guess guess = new guess();
     colourCode colourCode = new colourCode();
+
+    Color brownBackground = new Color(155, 98, 10);
  
     
     public GUI(int tN, int gN){
@@ -55,42 +56,38 @@ public class GUI implements ActionListener{
         
         boardLabel[startPoint].setIcon(piccy);
         startPoint++;
-        guess.inputMyArray(piccy);
-        
-        if(startPoint == game.getGuessNum()){
-            System.exit(0);
-            //code for game over stuff
-        }
+        guess.inputMyArray(piccy); 
         
         if(startPoint % game.getGuessNum() == 0){ 
-            updateResults(colourCode.colAndPlaceCount(guess.getMyArray(), colourCode.getCodeArray()), 
-            colourCode.colCount(guess.getMyArray(), colourCode.getCodeArray()));
-        
-            startPoint = startPoint - (game.getGuessNum()*2);
+            
+            updateResults(guess.colAndPlaceCount(guess.getMyArray(), colourCode.getCodeArray()),
+            guess.colCount(guess.getMyArray(), colourCode.getCodeArray()), startPoint);
 
-            colourCode.initCode(game.getGuessNum());
-            dynTryNum--;
+            if(guess.colAndPlaceCount(guess.getMyArray(), colourCode.getCodeArray()) 
+            == game.getGuessNum()){
+                EndGUI newEndGUI = new EndGUI(/*win status?*/);
+            }
         }
-        
-        
+ 
+        if(startPoint == game.getGuessNum()*game.getTryNum()){
+            EndGUI newEndGUI = 
+        } 
     }
 
-    public void updateResults(int colAndPlace, int col){
+    public void updateResults(int colAndPlace, int col, int sP){
+            sP = sP - game.getGuessNum();
             System.out.println("colPlace: "+colAndPlace);
-            for(int t = 0; t < colAndPlace; t++){
-                resultLabel[t] = new JLabel(pic[8]);
-                resultPanel[dynTryNum].add(resultLabel[t]);
+            for(p = sP; p < sP + colAndPlace; p++){
+                resultLabel[p].setIcon(pic[8]);
             }
-            System.out.println("col: "+col);
-            for(int u = 0; u < col; u++){
-                resultLabel[u] = new JLabel(pic[9]);
-                resultPanel[dynTryNum].add(resultLabel[u]);
+            System.out.println("col: "+ col);
+            for(p = sP + colAndPlace; p < sP + colAndPlace + col; p++){
+                resultLabel[p].setIcon(pic[9]);
             }
             System.out.println("neither col or place: "+(game.getGuessNum() - colAndPlace - col));
-            /* for(int v = 0; v < (game.getGuessNum() - colAndPlace - col); v++){
-                resultLabel[v] = new JLabel(pic[7]);
-                resultPanel[dynTryNum].add(resultLabel[v]);
-            } */
+            for(p = sP + colAndPlace + col; p < sP + game.getGuessNum(); p++){
+                resultLabel[p].setIcon(pic[7]);
+            }   
     }
     
     //initializers--------------------------------------
@@ -115,10 +112,11 @@ public class GUI implements ActionListener{
             but[i] = new JButton(pic[i]);
             but[i].addActionListener(this);
             pan[1].add(but[i]);
+            but[i].setBackground(brownBackground);
         }
     }
 
-    public void initBoard(int tN, int gN){
+    private void initBoard(int tN, int gN){
         if(pan[2] != null){
             frame.remove(pan[2]);
         }
@@ -130,6 +128,8 @@ public class GUI implements ActionListener{
             boardLabel[j] = new JLabel(pic[7]);
             pan[2].add(boardLabel[j]);
         }
+
+        pan[2].setBackground(brownBackground);
     }
 
     public void initResults(int tN, int gN){
@@ -137,18 +137,20 @@ public class GUI implements ActionListener{
             frame.remove(pan[3]);
         }
 
-        pan[3] = new JPanel(new GridLayout(tN, 1));
+        pan[3] = new JPanel(new GridLayout(tN, 2));
         pan[0].add(pan[3], BorderLayout.EAST);
         
-        for(int k = 0; k < tN; k++){
-            resultPanel[k] = new JPanel(new GridLayout(2,2));
-            pan[3].add(resultPanel[k]);
+        //for(int k = 0; k < tN; k++){
+            //resultPanel[k] = new JPanel(new GridLayout(2,2));
+            //pan[3].add(resultPanel[k]);
 
-            for(int l = 0; l < gN; l++){
+            for(int l = 0; l < tN * gN; l++){
                 resultLabel[l] = new JLabel(pic[7]);
-                resultPanel[k].add(resultLabel[l]);
-            }
+                //resultPanel[k].add(resultLabel[l]);
+                pan[3].add(resultLabel[l]);
+            //}
         }
+        pan[3].setBackground(brownBackground);
     }
 
     //getters--------------------------------------------
@@ -168,30 +170,8 @@ public class GUI implements ActionListener{
     public static int getNumButtons(){
         return numButtons;
     }
-
-    public String getButPressed(){
-        return butPressed;
-    }
     //setters--------------------------------------------
 
-    public void setButPressed(Picture p){
-        switch(p.getFilename()){
-            case "Colour_0.png":
-            System.out.println("butpress");
-                butPressed = "red";
-            case "Colour_1.png":
-                butPressed = "orange";
-            case "Colour_2.png":
-                butPressed = "yellow";
-            case "Colour_3.png":
-                butPressed = "green";
-            case "Colour_4.png":
-                butPressed = "blue";
-            case "Colour_5.png":
-                butPressed = "indigo";
-            case "Colour_6.png":
-                butPressed = "violet";
-        }
-    }
+    
 
 }

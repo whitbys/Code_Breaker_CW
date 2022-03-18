@@ -1,57 +1,90 @@
-//clean up stuff:
-//change variable names
-//add coments
-//make functions out of chunks of code
-//fix newline mechanic
-//fix GUI array size declaration
+//in update results have a parameter of how many times -> put into for loop
 
-//put the tryNum and guess num here as static variables
-//static reference them in GUI
-//now able to make arrays
+        //gui.getJFrame().dispose();
 
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class game{
     private static int guessNum = 4;
     private static int tryNum = 6;
     
-    
-    
-    
-    //includes logic for different levels
-    //change gui contructor to be able to input diff amounts of tries and guesses
-    
+    private static final int numButtons = 3;
+    private static final int numLabels = 2;
 
-    //gui
-    //guess (recording guesses)
-    //ColourCode
+    JFrame frame = new JFrame("MENU");
+    JPanel panel = new JPanel(new BorderLayout());
+    JButton butt[] = new JButton[numButtons];
+    JLabel label[] = new JLabel[numLabels];
     
-    //things to ask:
-    //private static, getters and setters for everything
-    //change filename
-
-
-    public static void main(String[] args){
-        String level[] = new String[3];
-        level[0] = "EASY";
-        level[1] = "MEDIUM";
-        level[2] = "HARD";
-
-        GUI gui = new GUI(tryNum, guessNum);
-        //guess guess = new guess();
-
+    //contructor without, call in main function
+    public game(){
+        frame.setContentPane(panel);
+        initButtons();
         
-
         
-//in update results have a parameter of how many times -> put into for loop
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 600);
+        frame.setVisible(true);
+    }
 
-
-
-
-
-        //gui.getJFrame().dispose();
+    //contructor with win or lose parameter, call in action listener if statements
+    public game(Boolean win){
+        frame.setContentPane(panel);
+        initButtons();
+        
+        
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 600);
+        frame.setVisible(true);
     }
     
+    
+    public static void main(String[] args){
+        
+        
 
+        GUI gui = new GUI(tryNum, guessNum);
+        }
+    
+    
+    //initialisers----------------------------------------------------------
+
+    private void initButtons(){
+        butt[0] = new JButton("EASY");
+        butt[0].setFont(new Font("Tahoma", font.BOLD, 12));
+        butt[0].setBackground(new Color(0, 255 , 0));
+        butt[0].setBorder(new RoundedBorder(10));
+        
+        butt[1] = new JButton("MEDIUM");
+        butt[0].setFont(new Font("Tahoma", font.BOLD, 12));
+        butt[0].setBackground(new Color(255, 153 , 51));
+        butt[0].setBorder(new RoundedBorder(10));
+        
+        butt[2] = new JButton("HARD");
+        butt[0].setFont(new Font("Tahoma", font.BOLD, 12));
+        butt[0].setBackground(new Color(255, 0 , 0));
+        butt[0].setBorder(new RoundedBorder(10));
+
+        panel.add(butt[0], BorderLayout.WEST);
+        panel.add(butt[1], BorderLayout.CENTER);
+        panel.add(butt[2], BorderLayout.EAST);
+    }
+
+    public void initTextLabels(Boolean b){
+        label[0] = new JLabel("Select difficulty level");
+        
+        if(b == true){
+            label[0] = new JLabel("Win Status: YOU WON!");
+        }
+        else if(b==false){
+            label[0] = new JLabel("Win Status: you lost...");
+        }
+        
+    }
     
 
 
