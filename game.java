@@ -1,94 +1,105 @@
-//in update results have a parameter of how many times -> put into for loop
-
-        //gui.getJFrame().dispose();
-
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class game{
-    private static int guessNum = 4;
-    private static int tryNum = 6;
+
+//JTBD
+//javadoc + genreal comments
+//general comments +
+
+
+
+
+public class game implements ActionListener{
+    private static int guessNum;
+    private static int tryNum;
     
     private static final int numButtons = 3;
     private static final int numLabels = 2;
 
     JFrame frame = new JFrame("MENU");
     JPanel panel = new JPanel(new BorderLayout());
+    JPanel butPanel = new JPanel(new GridLayout(1,numButtons));
     JButton butt[] = new JButton[numButtons];
     JLabel label[] = new JLabel[numLabels];
+
     
-    //contructor without, call in main function
-    public game(){
+    public game(int w){
         frame.setContentPane(panel);
         initButtons();
+        initTextLabels(w);
         
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setSize(500, 150);
+        
         frame.setVisible(true);
     }
 
-    //contructor with win or lose parameter, call in action listener if statements
-    public game(Boolean win){
-        frame.setContentPane(panel);
-        initButtons();
-        
-        
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 600);
-        frame.setVisible(true);
+    public void actionPerformed(ActionEvent e){
+        frame.dispose();
+
+        if(e.getSource() == butt[0]){
+            setTryNum(8);
+            setGuessNum(2);
+            GUI easyGUI = new GUI(tryNum, guessNum, 325, 875);
+        }
+        else if(e.getSource() == butt[1]){
+            setTryNum(6);
+            setGuessNum(4);
+            GUI mediumGUI = new GUI(tryNum, guessNum, 645, 700);
+        }
+        else if(e.getSource() == butt[2]){
+            setTryNum(4);
+            setGuessNum(6);
+            GUI hardGUI = new GUI(tryNum, guessNum, 901, 525);
+        }
     }
-    
     
     public static void main(String[] args){
-        
-        
-
-        GUI gui = new GUI(tryNum, guessNum);
+        game game = new game(0);
         }
-    
     
     //initialisers----------------------------------------------------------
 
     private void initButtons(){
+        panel.add(butPanel, BorderLayout.CENTER);
+        
         butt[0] = new JButton("EASY");
-        butt[0].setFont(new Font("Tahoma", font.BOLD, 12));
         butt[0].setBackground(new Color(0, 255 , 0));
-        butt[0].setBorder(new RoundedBorder(10));
         
         butt[1] = new JButton("MEDIUM");
-        butt[0].setFont(new Font("Tahoma", font.BOLD, 12));
-        butt[0].setBackground(new Color(255, 153 , 51));
-        butt[0].setBorder(new RoundedBorder(10));
+        butt[1].setBackground(new Color(255, 153 , 51));
         
         butt[2] = new JButton("HARD");
-        butt[0].setFont(new Font("Tahoma", font.BOLD, 12));
-        butt[0].setBackground(new Color(255, 0 , 0));
-        butt[0].setBorder(new RoundedBorder(10));
+        butt[2].setBackground(new Color(255, 0 , 0));
 
-        panel.add(butt[0], BorderLayout.WEST);
-        panel.add(butt[1], BorderLayout.CENTER);
-        panel.add(butt[2], BorderLayout.EAST);
+        for(int i = 0; i < numButtons; i++){
+            butt[i].addActionListener(this);
+            butPanel.add(butt[i]);
+        }
+        
     }
 
-    public void initTextLabels(Boolean b){
-        label[0] = new JLabel("Select difficulty level");
+    public void initTextLabels(int w){
+        label[0] = new JLabel("Welcome to Code Breaker, Please select a difficulty level:");
+        panel.add(label[0], BorderLayout.NORTH);
         
-        if(b == true){
-            label[0] = new JLabel("Win Status: YOU WON!");
+        if(w == 1){
+            label[1] = new JLabel("Win Status: YOU WON!");
+            panel.add(label[1], BorderLayout.SOUTH);
+            
         }
-        else if(b==false){
-            label[0] = new JLabel("Win Status: you lost...");
+        else if(w == -1){
+            label[1] = new JLabel("Win Status: you lost...");
+            panel.add(label[1], BorderLayout.SOUTH);
         }
         
     }
     
-
-
     //getters --------------------------------------------------------------
+    
     public static int getGuessNum(){
         return guessNum;
     }
@@ -96,7 +107,6 @@ public class game{
     public static int getTryNum(){
         return tryNum;
     }
-
 
     //setters ----------------------------------------------------------------
 
@@ -107,19 +117,4 @@ public class game{
     public static void setTryNum(int y){
         tryNum = y;
     }
-
-
 }
-
-
-/* if(startPoint == game.getGuessNum()){
-    System.exit(0);
-    //set startpoint to 1(arbitrary value in range)
-    //display success window for 10 seconds 
-    //back to settings
-    
-    
-    //settings class : win status panel,high score, etc  + 3 difficulty levels
-    //if win -> win screen + setting
-    //if lose -> lose screen + setting
-} */
