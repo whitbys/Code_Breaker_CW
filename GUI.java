@@ -2,6 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Models a Code Breaker game
+ * Allows user to input different colour choices and gain feedback
+ *  in pursuit of attempting to crack a computer genrated combination
+ */
 public class GUI implements ActionListener{
     //constants
     private static final int numPanels = 4;
@@ -10,12 +15,8 @@ public class GUI implements ActionListener{
     private static final int numMiniPanels = 2;
     private static final int numTextLabels = 2;
     
-
-
     //instance variables
     private int startPoint = 0;
-    private String butPressed = null;
-    
 
     //frame + components
     private static JFrame frame = new JFrame("CODE BREAKER");
@@ -27,12 +28,17 @@ public class GUI implements ActionListener{
     private JLabel resultLabel[] = new JLabel[200];
     private JLabel textLabel[] = new JLabel[numTextLabels];
 
-
     guess guess = new guess();
     colourCode colourCode = new colourCode();
-
     Color brownBackground = new Color(155, 98, 10);
  
+    /**
+     * Creates a game window
+     * @param tN number of tries
+     * @param gN number of guesses per try
+     * @param w width of window
+     * @param h height of window
+     */
     public GUI(int tN, int gN, int w, int h){
         pan[0] = new JPanel(new BorderLayout());
         frame.setContentPane(pan[0]);
@@ -41,16 +47,17 @@ public class GUI implements ActionListener{
         initButtons();
         initBoard(tN, gN);
         initResults(tN, gN);
+        
         colourCode.initCode(gN);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        //frame.setMinimumSize(arg0);
-        
         frame.setSize(w, h);
         frame.setVisible(true);
     }
 
+    
+    //takes button pressed -> updates input display
     public void actionPerformed(ActionEvent e){
         //change JLabel depending on button
         Picture piccy = null;
@@ -59,85 +66,44 @@ public class GUI implements ActionListener{
                 piccy = pic[m];
             }
         }
-        
         boardLabel[startPoint].setIcon(piccy);
-        startPoint++;
-        guess.inputMyArray(piccy); 
         
+        startPoint++;
+
+        //record answer
+        guess.inputMyArray(piccy);
+         
+        //end of line
         if(startPoint % game.getGuessNum() == 0){ 
             int cp = colAndPlaceCount(guess.getMyArray(), colourCode.getCodeArray());
             int c = colCount(guess.getMyArray(), colourCode.getCodeArray());
             
             updateResults(cp,c, startPoint);
 
-            
-
+            //win condition
             if(cp == game.getGuessNum()){
-                //wait 5 seconds
-                
                 frame.dispose();
                 game newgame = new game(1);
             }
         }
  
+        //lose condition
         if(startPoint == game.getGuessNum()*game.getTryNum()){
-            //wait 10 seconds
-            
             frame.dispose();
             game newgame = new game(-1);
         } 
     }
 
-    private int colAndPlaceCount(String _myArray[], String _codeArray[]){
-        int nColAndPlace = 0;
-
-        for(int i = 0; i < game.getGuessNum(); i++){
-            if(_myArray[i] == _codeArray[i]){
-                nColAndPlace++;
-                guess.setMyArrayElement(i, "apples");
-                colourCode.setCodeArrayElement(i, "oranges");
-            }
-        }
-        
-        
-        
-        return nColAndPlace;
+    /**
+     * Obtains specified Picture from all included in game
+     * @param c array index
+     * @return Picture from game
+     */
+    public static Picture getPic(int c){
+        return pic[c];
     }
+    //private methods--------------------------------------
     
-    private int colCount(String _myArray[], String _codeArray[]){
-        int nCol = 0;
-        
-        for(int i = 0; i < game.getGuessNum(); i++){
-            for(int j = 0; j < game.getGuessNum(); j++){
-                if(_myArray[i] == _codeArray[j]){
-                    nCol++;
-                }
-            }
-        }
-        for(int j = 0; j < game.getGuessNum(); j++){
-            colourCode.setCodeArrayElement(j, colourCode.getOGCodeArrayElement(j));
-        }
-        return nCol;
-    } 
-    
-    public void updateResults(int colAndPlace, int col, int sP){
-            int p;
-            sP = sP - game.getGuessNum();
-            System.out.println("colPlace: "+colAndPlace);
-            for(p = sP; p < sP + colAndPlace; p++){
-                resultLabel[p].setIcon(pic[8]);
-            }
-            System.out.println("col: "+ col);
-            for(p = sP + colAndPlace; p < sP + colAndPlace + col; p++){
-                resultLabel[p].setIcon(pic[9]);
-            }
-            System.out.println("neither col or place: "+(game.getGuessNum() - colAndPlace - col));
-            for(p = sP + colAndPlace + col; p < sP + game.getGuessNum(); p++){
-                resultLabel[p].setIcon(pic[7]);
-            }   
-    }
-    
-    //initializers--------------------------------------
     private void initPictures(){
         pic[0] = new Picture("Colour_0.png");
         pic[1] = new Picture("Colour_1.png");
@@ -151,11 +117,12 @@ public class GUI implements ActionListener{
         pic[9] = new Picture("Score_1.png");
     }
 
-    
+    //add a button board
     private void initButtons(){
         pan[1] = new JPanel(new GridLayout());
         pan[0].add(pan[1], BorderLayout.SOUTH);
         
+        //add buttons to button board
         for(int i = 0; i < numButtons; i++){
             but[i] = new JButton(pic[i]);
             but[i].addActionListener(this);
@@ -164,62 +131,97 @@ public class GUI implements ActionListener{
         }
     }
 
+    //add an input display panel
     private void initBoard(int tN, int gN){
-        pan[2] = new JPanel(new BorderLayout());
+        pan[2] = new JPanel(brownBackground);
+        pan[2].setBackground(new Color(255,255,255));
         pan[0].add(pan[2], BorderLayout.CENTER);
 
+        //input diplay body
         miniPanel[0] = new JPanel(new GridLayout(tN, gN));
         pan[2].add(miniPanel[0], BorderLayout.SOUTH);
-
         for(int j = 0; j < tN*gN; j++){
             boardLabel[j] = new JLabel(pic[7]);
             miniPanel[0].add(boardLabel[j]);
         }
 
-        pan[2].setBackground(brownBackground);
-
+        //input display title
         textLabel[0] = new JLabel("Guesses Allowed:"+ tN);
         pan[2].add(textLabel[0], BorderLayout.NORTH);
     }
 
-    public void initResults(int tN, int gN){
+    //add a results board
+    private void initResults(int tN, int gN){
         pan[3] = new JPanel(new BorderLayout());
+        pan[3].setBackground(brownBackground);
         pan[0].add(pan[3], BorderLayout.EAST);
 
+        //results board body
         miniPanel[1] = new JPanel(new GridLayout(tN, gN));
         pan[3].add(miniPanel[1], BorderLayout.SOUTH);
-
-        
-
-            for(int l = 0; l < tN * gN; l++){
-                resultLabel[l] = new JLabel(pic[7]);
-                miniPanel[1].add(resultLabel[l]);
+        for(int l = 0; l < tN * gN; l++){
+            resultLabel[l] = new JLabel(pic[7]);
+            miniPanel[1].add(resultLabel[l]);
         }
-        pan[3].setBackground(brownBackground);
         
+        //results board title
         textLabel[1] = new JLabel("Results:");
         pan[3].add(textLabel[1], BorderLayout.NORTH);
     }
 
-    //getters--------------------------------------------
+    //compare: user answer, secret code
+    //return number of right guesses in the right place
+    private int colAndPlaceCount(String _myArray[], String _codeArray[]){
+        int nColAndPlace = 0;
 
-    public static JButton getBut(int b){
-        return but[b];
-    }
+        for(int i = 0; i < game.getGuessNum(); i++){
+            if(_myArray[i] == _codeArray[i]){
+                nColAndPlace++;
 
-    public JFrame getJFrame(){
-        return frame;
+                //update secret so that colCount doesn't overlap with ColAndPlaceCount
+                guess.setMyArrayElement(i, "apples");
+                colourCode.setCodeArrayElement(i, "oranges");
+            }
+        }
+        return nColAndPlace;
     }
-
-    public static Picture getPic(int c){
-        return pic[c];
-    }
-
-    public static int getNumButtons(){
-        return numButtons;
-    }
-    //setters--------------------------------------------
+    
+    //compare: user answer, secret code
+    //return number of right guesses in the wrong place
+    private int colCount(String _myArray[], String _codeArray[]){
+        int nCol = 0;
+        
+        for(int i = 0; i < game.getGuessNum(); i++){
+            for(int j = 0; j < game.getGuessNum(); j++){
+                if(_myArray[i] == _codeArray[j]){
+                    nCol++;
+                }
+            }
+        }
+        //revert changed secret code back to original so it is maintained for next guess
+        for(int j = 0; j < game.getGuessNum(); j++){
+            colourCode.setCodeArrayElement(j, colourCode.getOGCodeArrayElement(j));
+        }
+        return nCol;
+    } 
 
     
+    //update results board to give user feedback on last try
+    private void updateResults(int colAndPlace, int col, int sP){
+        int p;
+        sP = sP - game.getGuessNum();
+        
+        for(p = sP; p < sP + colAndPlace; p++){
+            resultLabel[p].setIcon(pic[8]);
+        }
+        
+        for(p = sP + colAndPlace; p < sP + colAndPlace + col; p++){
+            resultLabel[p].setIcon(pic[9]);
+        }
+        
+        for(p = sP + colAndPlace + col; p < sP + game.getGuessNum(); p++){
+            resultLabel[p].setIcon(pic[7]);
+        }   
+}
 
 }

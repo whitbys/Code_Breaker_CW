@@ -2,33 +2,36 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
-//JTBD
-//javadoc + genreal comments
-//general comments +
-
-
-
-
+/**
+*Models a settings menu.
+*A GUI displayed before and after games which lets users 
+choose a difficulty level and see if they won or lost
+*@author Steven Whitby
+*/
 public class game implements ActionListener{
+    //constants
+    private static final int numButtons = 3;
+    private static final int numLabels = 2;
+    
+    //difficulty level parameters
     private static int guessNum;
     private static int tryNum;
     
-    private static final int numButtons = 3;
-    private static final int numLabels = 2;
+    //window frame + components
+    private JFrame frame = new JFrame("MENU");
+    private JPanel panel = new JPanel(new BorderLayout());
+    private JPanel butPanel = new JPanel(new GridLayout(1,numButtons));
+    private JButton butt[] = new JButton[numButtons];
+    private JLabel label[] = new JLabel[numLabels];
 
-    JFrame frame = new JFrame("MENU");
-    JPanel panel = new JPanel(new BorderLayout());
-    JPanel butPanel = new JPanel(new GridLayout(1,numButtons));
-    JButton butt[] = new JButton[numButtons];
-    JLabel label[] = new JLabel[numLabels];
-
-    
+    /**
+     * creates settings menu
+     * @param w The win status
+     */
     public game(int w){
         frame.setContentPane(panel);
         initButtons();
         initTextLabels(w);
-        
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -37,19 +40,25 @@ public class game implements ActionListener{
         frame.setVisible(true);
     }
 
+    //public methods --------------------------------------------------------------
+    
+    //creates a new game based on difficulty button chosen
     public void actionPerformed(ActionEvent e){
         frame.dispose();
 
+        //EASY
         if(e.getSource() == butt[0]){
             setTryNum(8);
             setGuessNum(2);
             GUI easyGUI = new GUI(tryNum, guessNum, 325, 875);
         }
+        //MEDIUM
         else if(e.getSource() == butt[1]){
             setTryNum(6);
             setGuessNum(4);
             GUI mediumGUI = new GUI(tryNum, guessNum, 645, 700);
         }
+        //HARD
         else if(e.getSource() == butt[2]){
             setTryNum(4);
             setGuessNum(6);
@@ -57,11 +66,31 @@ public class game implements ActionListener{
         }
     }
     
+    /**
+     * instantiates a settings window with no win status
+     * @param args
+     */
     public static void main(String[] args){
         game game = new game(0);
-        }
-    
-    //initialisers----------------------------------------------------------
+    }
+
+    /**
+     * Obtains no. of guesses per try given to user
+     * @return number of guesses 
+     */
+    public static int getGuessNum(){
+        return guessNum;
+    }
+
+    /**
+     * Obtains total tries given to user
+     * @return nuber of tries
+     */
+    public static int getTryNum(){
+        return tryNum;
+    }
+
+    //private methods ----------------------------------------------------------------
 
     private void initButtons(){
         panel.add(butPanel, BorderLayout.CENTER);
@@ -82,7 +111,7 @@ public class game implements ActionListener{
         
     }
 
-    public void initTextLabels(int w){
+    private void initTextLabels(int w){
         label[0] = new JLabel("Welcome to Code Breaker, Please select a difficulty level:");
         panel.add(label[0], BorderLayout.NORTH);
         
@@ -98,23 +127,11 @@ public class game implements ActionListener{
         
     }
     
-    //getters --------------------------------------------------------------
-    
-    public static int getGuessNum(){
-        return guessNum;
-    }
-
-    public static int getTryNum(){
-        return tryNum;
-    }
-
-    //setters ----------------------------------------------------------------
-
-    public static void setGuessNum(int x){
+    private void setGuessNum(int x){
         guessNum = x;
     }
 
-    public static void setTryNum(int y){
+    private void setTryNum(int y){
         tryNum = y;
     }
 }
