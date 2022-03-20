@@ -35,7 +35,7 @@ public class game implements ActionListener{
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setSize(500, 150);
+        frame.setSize(750, 250);
         
         frame.setVisible(true);
     }
@@ -50,25 +50,25 @@ public class game implements ActionListener{
         if(e.getSource() == butt[0]){
             setTryNum(8);
             setGuessNum(2);
-            GUI easyGUI = new GUI(tryNum, guessNum, 325, 875);
+            GUI easyGUI = new GUI(tryNum, guessNum, 325, 925);
         }
         //MEDIUM
         else if(e.getSource() == butt[1]){
             setTryNum(6);
             setGuessNum(4);
-            GUI mediumGUI = new GUI(tryNum, guessNum, 645, 700);
+            GUI mediumGUI = new GUI(tryNum, guessNum, 645, 750);
         }
         //HARD
         else if(e.getSource() == butt[2]){
             setTryNum(4);
             setGuessNum(6);
-            GUI hardGUI = new GUI(tryNum, guessNum, 901, 525);
+            GUI hardGUI = new GUI(tryNum, guessNum, 901, 575);
         }
     }
     
     /**
      * instantiates a settings window with no win status
-     * @param args
+     * @param args The command line arguments
      */
     public static void main(String[] args){
         game game = new game(0);
@@ -92,9 +92,11 @@ public class game implements ActionListener{
 
     //private methods ----------------------------------------------------------------
 
+    //create difficulty buttons
     private void initButtons(){
         panel.add(butPanel, BorderLayout.CENTER);
         
+        //button characteristics
         butt[0] = new JButton("EASY");
         butt[0].setBackground(new Color(0, 255 , 0));
         
@@ -111,17 +113,30 @@ public class game implements ActionListener{
         
     }
 
+    //create top and bottom text labels for menu
     private void initTextLabels(int w){
+        //top message
         label[0] = new JLabel("Welcome to Code Breaker, Please select a difficulty level:");
+        label[0].setFont(new Font("serif", Font.PLAIN, 25));
+        label[0].setForeground(Color.BLACK);
         panel.add(label[0], BorderLayout.NORTH);
         
+        //bottom message
+        label[1] = new JLabel();
+        label[1].setOpaque(true);
+        label[1].setBackground(Color.BLACK);
+        label[1].setFont(new Font("serif", Font.PLAIN, 30));
+        //win characteristics
         if(w == 1){
-            label[1] = new JLabel("Win Status: YOU WON!");
+            label[1].setText("Win Status: YOU WON!");
+            label[1].setForeground(Color.GREEN);
             panel.add(label[1], BorderLayout.SOUTH);
             
         }
+        //lose characteristics
         else if(w == -1){
-            label[1] = new JLabel("Win Status: you lost...");
+            label[1].setText("Win Status: you lost...");
+            label[1].setForeground(Color.RED);
             panel.add(label[1], BorderLayout.SOUTH);
         }
         

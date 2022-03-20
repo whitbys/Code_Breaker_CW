@@ -34,6 +34,7 @@ public class Picture extends ImageIcon
 
     /**
      * Determines the filename associated with this Picture.
+     * @return returns filename associated with picture
      */
     public String getFilename()
     {

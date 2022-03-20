@@ -20,7 +20,6 @@ public class guess{
      */
     public void inputMyArray(Picture p){
         myArray[numGuessesSoFar] = p.getFilename();
-        System.out.println("myGUESS: "+myArray[numGuessesSoFar]);
         guessIncrement();
     }
     

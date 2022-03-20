@@ -119,7 +119,7 @@ public class GUI implements ActionListener{
 
     //add a button board
     private void initButtons(){
-        pan[1] = new JPanel(new GridLayout());
+        pan[1] = new JPanel(new GridLayout(1, numButtons));
         pan[0].add(pan[1], BorderLayout.SOUTH);
         
         //add buttons to button board
@@ -133,8 +133,8 @@ public class GUI implements ActionListener{
 
     //add an input display panel
     private void initBoard(int tN, int gN){
-        pan[2] = new JPanel(brownBackground);
-        pan[2].setBackground(new Color(255,255,255));
+        pan[2] = new JPanel(new BorderLayout());
+        pan[2].setBackground(brownBackground);
         pan[0].add(pan[2], BorderLayout.CENTER);
 
         //input diplay body
@@ -146,7 +146,9 @@ public class GUI implements ActionListener{
         }
 
         //input display title
-        textLabel[0] = new JLabel("Guesses Allowed:"+ tN);
+        textLabel[0] = new JLabel("Guesses:");
+        textLabel[0].setFont(new Font("serif", Font.PLAIN, 25));
+        textLabel[0].setForeground(Color.WHITE);
         pan[2].add(textLabel[0], BorderLayout.NORTH);
     }
 
@@ -166,6 +168,8 @@ public class GUI implements ActionListener{
         
         //results board title
         textLabel[1] = new JLabel("Results:");
+        textLabel[1].setFont(new Font("serif", Font.PLAIN, 25));
+        textLabel[1].setForeground(Color.WHITE);
         pan[3].add(textLabel[1], BorderLayout.NORTH);
     }
 
